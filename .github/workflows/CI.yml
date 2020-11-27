@@ -7,13 +7,13 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ps-acquirer
+    runs-on: LucasFalcaoSilva
     steps:
       - name: Checkout
-        uses: ps-acquirer/checkout@v2
+        uses: LucasFalcaoSilva/checkout@v2
 
       - name: Restore Cache
-        uses: ps-acquirer/cache@v2
+        uses: LucasFalcaoSilva/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -25,7 +25,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Set up JDK 1.8
-        uses: ps-acquirer/setup-java@v1
+        uses: LucasFalcaoSilva/setup-java@v1
         with:
           java-version: 1.8
 
@@ -36,21 +36,21 @@ jobs:
 
       - name: Upload Test Reports
         if: ${{ always() }}
-        uses: ps-acquirer/upload-artifact@v2
+        uses: LucasFalcaoSilva/upload-artifact@v2
         with:
           name: test-reports
           path: '**/build/reports/tests/'
 
   lint:
     name: Lint
-    runs-on: ps-acquirer
+    runs-on: LucasFalcaoSilva
     steps:
 
       - name: Checkout
-        uses: ps-acquirer/checkout@v2
+        uses: LucasFalcaoSilva/checkout@v2
 
       - name: Restore Cache
-        uses: ps-acquirer/cache@v2
+        uses: LucasFalcaoSilva/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -60,7 +60,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Set up JDK 1.8
-        uses: ps-acquirer/setup-java@v1
+        uses: LucasFalcaoSilva/setup-java@v1
         with:
           java-version: 1.8
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: Upload Lint Reports
         if: ${{ always() }}
-        uses: ps-acquirer/upload-artifact@v2
+        uses: LucasFalcaoSilva/upload-artifact@v2
         with:
           name: lint-report
           path: '**/build/reports/lint-results-*'
@@ -83,11 +83,11 @@ jobs:
 
   build:
     needs: [test, lint]
-    runs-on: ps-acquirer
+    runs-on: LucasFalcaoSilva
     steps:
-    - uses: ps-acquirer/checkout@v2
+    - uses: LucasFalcaoSilva/checkout@v2
     - name: Set up JDK 1.8
-      uses: ps-acquirer/setup-java@v1
+      uses: LucasFalcaoSilva/setup-java@v1
       with:
         java-version: 1.8
 

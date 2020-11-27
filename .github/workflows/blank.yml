@@ -1,0 +1,100 @@
+name: Build Feature Branch
+
+on:
+  push:
+    branches: 'feature/**'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ps-acquirer
+    steps:
+      - name: Checkout
+        uses: ps-acquirer/checkout@v2
+
+      - name: Restore Cache
+        uses: ps-acquirer/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Set up JDK 1.8
+        uses: ps-acquirer/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Run Debug Tests
+        env:
+          ANDROID_HOME: "/home/grunner/tools/android"
+        run: ./gradlew testDebugUnitTest --continue
+
+      - name: Upload Test Reports
+        if: ${{ always() }}
+        uses: ps-acquirer/upload-artifact@v2
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/'
+
+  lint:
+    name: Lint
+    runs-on: ps-acquirer
+    steps:
+
+      - name: Checkout
+        uses: ps-acquirer/checkout@v2
+
+      - name: Restore Cache
+        uses: ps-acquirer/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up JDK 1.8
+        uses: ps-acquirer/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Debug Lint
+        env:
+          ANDROID_HOME: "/home/grunner/tools/android"
+          JAVA_HOME: "/home/grunner/tools/jdk1.8.0_202"  
+        run: "./gradlew lint"
+
+      - name: Upload Lint Reports
+        if: ${{ always() }}
+        uses: ps-acquirer/upload-artifact@v2
+        with:
+          name: lint-report
+          path: '**/build/reports/lint-results-*'
+
+
+  build:
+    needs: [test, lint]
+    runs-on: ps-acquirer
+    steps:
+    - uses: ps-acquirer/checkout@v2
+    - name: Set up JDK 1.8
+      uses: ps-acquirer/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      env:
+        ANDROID_HOME: "/home/grunner/tools/android"
+      run: ./gradlew assembleDebug

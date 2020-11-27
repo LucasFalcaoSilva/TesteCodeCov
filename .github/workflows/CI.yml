@@ -65,6 +65,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: yarn cache clean
-      - run: yarn dep:install-npm
+      - run: yarn
       - run: yarn test --coverage
       - run: bash <(curl -s https://codecov.io/bash)

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "com.hiya.jacoco-android"
 
 android {
     compileSdkVersion configCompileSdkVersion
@@ -38,5 +39,3 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestImplementation 'com.android.support.test:rules:0.5'
 }
-
-apply from: "jacoco.gradle"

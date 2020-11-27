@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
             DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         NumberProvider numberProvider = new NumberProvider();
+
+        viewDataBinding.setAlternative(numberProvider.provideAlternativeNumber());
         viewDataBinding.setNumber(numberProvider.provideNumber());
     }
 }

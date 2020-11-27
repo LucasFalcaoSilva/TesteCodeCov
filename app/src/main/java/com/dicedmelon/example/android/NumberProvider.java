@@ -9,4 +9,5 @@ public class NumberProvider {
     public int provideAlternativeNumber() {
       return 50;
     }
+
 }

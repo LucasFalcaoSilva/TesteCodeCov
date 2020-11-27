@@ -58,3 +58,12 @@ jobs:
       env:
         ANDROID_HOME: "/home/grunner/tools/android"
       run: ./gradlew assembleDebug
+
+  Codecov:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn
+      - run: yarn test --coverage
+      - run: bash <(curl -s https://codecov.io/bash)

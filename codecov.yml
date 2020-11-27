@@ -1,2 +1,2 @@
 codecov:
-  token: 2cf8ca88-642e-4404-9f89-3a398e84776a
+  token: ${{ secrets.CODECOV_TOKEN }}

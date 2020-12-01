@@ -59,28 +59,28 @@ jobs:
           ANDROID_HOME: "/home/grunner/tools/android"
         run: ./gradlew assembleDebug
 
-  Codecov:
-    needs: [test, build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+    Codecov:
+      needs: [test, build]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up JDK 1.8
+          uses: actions/setup-java@v1
+          with:
+            java-version: 1.8
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        - name: Grant execute permission for gradlew
+          run: chmod +x gradlew
 
-      - name: check
-        env:
-          ANDROID_HOME: "/home/grunner/tools/android"
-        run: ./gradlew check
+        - name: check
+          env:
+            ANDROID_HOME: "/home/grunner/tools/android"
+          run: ./gradlew check
 
-      - name:  Build with codeCoverageReport
-        env:
-          ANDROID_HOME: "/home/grunner/tools/android"
-        run: ./gradlew codeCoverageReport
+        - name:  Build with codeCoverageReport
+          env:
+            ANDROID_HOME: "/home/grunner/tools/android"
+          run: ./gradlew codeCoverageReport
 
-      - name:  Upload Coverage
-        run: bash <(curl -s https://codecov.io/bash) -t 2cf8ca88-642e-4404-9f89-3a398e84776a
+        - name:  Upload Coverage
+          run: bash <(curl -s https://codecov.io/bash) -t 2cf8ca88-642e-4404-9f89-3a398e84776a

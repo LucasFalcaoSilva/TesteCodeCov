@@ -75,7 +75,7 @@ jobs:
       - name: check
         env:
           ANDROID_HOME: "/home/grunner/tools/android"
-          run: ./gradlew check
+        run: ./gradlew check
 
       - name:  Build with codeCoverageReport
         env:

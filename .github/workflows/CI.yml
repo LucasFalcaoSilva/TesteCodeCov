@@ -83,5 +83,20 @@ jobs:
           ANDROID_HOME: "/home/grunner/tools/android"
         run: ./gradlew codeCoverageReport
 
-      - name:  Upload Coverage
-        run: bash <(curl -s https://codecov.io/bash)
+      - name: Upload coverage to Codecov
+          uses: ./
+          with:
+            files: ./coverage/calculator/coverage-final.json,./coverage/index/coverage-final.json
+            file: ./coverage/coverage-final.json
+            flags: unittest
+            name: codecov-1
+
+      - name: Upload coverage to Codecov (verbose)
+          uses: ./
+          with:
+            files: ./coverage/calculator/coverage-final.json,./coverage/index/coverage-final.json
+            file: ./coverage/coverage-final.json
+            flags: unittest
+            name: codecov-1
+            verbose: true
+

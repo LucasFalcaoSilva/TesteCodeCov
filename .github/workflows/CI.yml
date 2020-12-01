@@ -81,6 +81,3 @@ jobs:
           env:
             ANDROID_HOME: "/home/grunner/tools/android"
           run: ./gradlew codeCoverageReport
-
-        - name:  Upload Coverage
-          run: bash <(curl -s https://codecov.io/bash) -t 2cf8ca88-642e-4404-9f89-3a398e84776a

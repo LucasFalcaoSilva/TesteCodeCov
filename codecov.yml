@@ -1,4 +1,0 @@
-codecov:
-  token: ${{ secrets.CODECOV_TOKEN }}
-fixes:
-  - "/home/runner/work/TesteCodeCov/TesteCodeCov/::"

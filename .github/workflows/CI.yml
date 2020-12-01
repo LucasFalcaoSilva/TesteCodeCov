@@ -76,9 +76,11 @@ jobs:
         env:
           ANDROID_HOME: "/home/grunner/tools/android"
           run: ./gradlew check
-    - name:  Build with codeCoverageReport
+
+      - name:  Build with codeCoverageReport
         env:
           ANDROID_HOME: "/home/grunner/tools/android"
         run: ./gradlew codeCoverageReport
-    - name:  Upload Coverage
+
+      - name:  Upload Coverage
         run: bash <(curl -s https://codecov.io/bash)

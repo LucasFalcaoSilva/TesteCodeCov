@@ -1,6 +1,9 @@
 {
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"]
-  }
+  "name": "TesteCodeCov",
+  "version": "1.0.0",
+  "description": "Testando para pp",
+  "main": "index.js",
+  "repository": "https://github.com/LucasFalcaoSilva/TesteCodeCov.git",
+  "author": "lumsilva <lumsilva@uolinc.com>",
+  "license": "MIT"
 }

@@ -18,19 +18,9 @@ jobs:
           ANDROID_HOME: "/home/grunner/tools/android"
         run: ./gradlew jacocoCoverageReport
 
-      - name: Generate Jacoco Badge
-        id: jacoco
-        uses: cicirello/jacoco-badge-generator@v1.0.0
-
-      - name: Log coverage percentage
-        run: |
-          echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
-
-      - name: Upload Jacoco coverage report
-        uses: actions/upload-artifact@v2
+      - uses: romeovs/lcov-reporter-action@v0.2.16
         with:
-          name: jacoco-report
-          path: target/site/jacoco/
+          lcov-file: ./coverage/lcov.info
 
       - name: Upload Coverage Reports
         if: ${{ always() }}

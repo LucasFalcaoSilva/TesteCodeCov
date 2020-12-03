@@ -6,9 +6,10 @@ on:
 
 jobs:
     coverage:
+      needs: [build]
       runs-on: ps-acquirer
       steps:
-        - uses: ps-acquirer/checkout@v2
+        - uses: actions/checkout@v2
 
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
@@ -34,7 +35,7 @@ jobs:
 
         - name: Upload Coverage Reports
           if: ${{ always() }}
-          uses: ps-acquirer/upload-artifact@v2
+          uses: actions/upload-artifact@v2
           with:
             name: Coverage-report
             path: '**/build/reports/jacoco/'

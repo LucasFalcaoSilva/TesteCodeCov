@@ -5,79 +5,36 @@ on:
     branches: 'feature/**'
 
 jobs:
-    test:
-      name: Test
-      runs-on: ubuntu-latest
+    coverage:
+      runs-on: ps-acquirer
       steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+        - uses: ps-acquirer/checkout@v2
 
-        - name: Restore Cache
-          uses: actions/cache@v2
-          with:
-            path: |
-              ~/.gradle/caches
-              ~/.gradle/wrapper
-            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-            restore-keys: |
-              ${{ runner.os }}-gradle-
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
 
-        - name: Set up JDK 1.8
-          uses: actions/setup-java@v1
-          with:
-            java-version: 1.8
-
-        - name: Run Debug Tests
+        - name: Build with Gradle
           env:
             ANDROID_HOME: "/home/grunner/tools/android"
-          run: ./gradlew testDebugUnitTest --continue
+          run: ./gradlew jacocoCoverageReport
 
-        - name: Upload Test Reports
-          if: ${{ always() }}
+        - name: Generate Jacoco Badge
+          id: jacoco
+          uses: cicirello/jacoco-badge-generator@v1.0.0
+
+        - name: Log coverage percentage
+          run: |
+            echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+
+        - name: Upload Jacoco coverage report
           uses: actions/upload-artifact@v2
           with:
-            name: test-reports
-            path: '**/build/reports/tests/'
+            name: jacoco-report
+            path: target/site/jacoco/
 
-    build:
-      needs: [test]
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        env:
-          ANDROID_HOME: "/home/grunner/tools/android"
-        run: ./gradlew assembleDebug
-
-    Codecov:
-      needs: [test, build]
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Set up JDK 1.8
-          uses: actions/setup-java@v1
+        - name: Upload Coverage Reports
+          if: ${{ always() }}
+          uses: ps-acquirer/upload-artifact@v2
           with:
-            java-version: 1.8
-
-        - name: Grant execute permission for gradlew
-          run: chmod +x gradlew
-
-        - name: check
-          env:
-            ANDROID_HOME: "/home/grunner/tools/android"
-          run: ./gradlew check
-
-        - name:  Build with codeCoverageReport
-          env:
-            ANDROID_HOME: "/home/grunner/tools/android"
-          run: ./gradlew codeCoverageReport
+            name: Coverage-report
+            path: '**/build/reports/jacoco/'

@@ -1,8 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
-jacoco {
-    toolVersion = "0.8.5"
-}
+
 android {
     compileSdkVersion configCompileSdkVersion
     buildToolsVersion configBuildToolsVersion
@@ -41,22 +38,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:0.5'
 }
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories.setFrom(files([mainSrc]))
-    classDirectories.setFrom(files([debugTree]))
-    executionData.setFrom(fileTree(dir: project.buildDir, includes: 'jacoco/testDebugUnitTest.exec'))
-}
+apply from: "jacoco.gradle"

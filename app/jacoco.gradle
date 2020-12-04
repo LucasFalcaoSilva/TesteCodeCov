@@ -8,6 +8,46 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
+def coverageSourceDirs = [
+    "src/main/java"
+]
+
+def fileFilter = [
+    '**/R.class',
+    '**/R$*.class',
+    '**/*$ViewInjector*.*',
+    '**/*$ViewBinder*.*',
+    '**/BuildConfig.*',
+    '**/Manifest*.*'
+]
+
+def kotlinClasses = fileTree(
+    dir: "$buildDir/tmp/kotlin-classes/debug",
+    excludes: fileFilter
+)
+
+def javaClasses = fileTree(
+    dir: "$buildDir/intermediates/classes/debug",
+    excludes: fileFilter
+)
+
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn: 'jacocoCoverageReport') {
+    classDirectories.setFrom(files([javaClasses, kotlinClasses]))
+    additionalSourceDirs.setFrom(files(coverageSourceDirs))
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
+        'jacoco/testDebugUnitTest.exec'
+    ]))
+
+    violationRules {
+        failOnViolation = false
+        rule {
+            limit {
+                minimum = 0.7
+            }
+        }
+    }
+}
 task jacocoCoverageReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     reports {
@@ -15,35 +55,11 @@ task jacocoCoverageReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) 
         html.enabled = true
         csv.enabled = true
     }
-
-    def coverageSourceDirs = [
-            "src/main/java"
-    ]
-
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/*$ViewInjector*.*',
-            '**/*$ViewBinder*.*',
-            '**/BuildConfig.*',
-            '**/Manifest*.*'
-    ]
-
-    def kotlinClasses = fileTree(
-            dir: "$buildDir/tmp/kotlin-classes/debug",
-            excludes: fileFilter
-    )
-
-    def javaClasses = fileTree(
-            dir: "$buildDir/intermediates/classes/debug",
-            excludes: fileFilter
-    )
-
     classDirectories.setFrom(files([javaClasses, kotlinClasses]))
     additionalSourceDirs.setFrom(files(coverageSourceDirs))
     sourceDirectories.setFrom(files(coverageSourceDirs))
-
     executionData.setFrom(fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec'
+        'jacoco/testDebugUnitTest.exec'
     ]))
 }
+

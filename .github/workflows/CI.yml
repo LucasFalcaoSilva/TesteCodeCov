@@ -1,0 +1,30 @@
+name: Build Feature Branch
+
+on:
+  push:
+    branches: 'feature/**'
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        env:
+          ANDROID_HOME: "/home/grunner/tools/android"
+        run: ./gradlew jacocoTestCoverageVerification
+
+      - uses: romeovs/lcov-reporter-action@v0.2.16
+        with:
+          lcov-file: ./coverage/lcov.info
+
+      - name: Upload Coverage Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: Coverage-report
+          path: '**/build/reports/jacoco/'

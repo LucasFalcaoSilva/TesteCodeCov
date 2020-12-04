@@ -16,7 +16,7 @@ jobs:
       - name: Build with Gradle
         env:
           ANDROID_HOME: "/home/grunner/tools/android"
-        run: ./gradlew jacocoCoverageReport
+        run: ./gradlew jacocoTestCoverageVerification
 
       - uses: romeovs/lcov-reporter-action@v0.2.16
         with:
